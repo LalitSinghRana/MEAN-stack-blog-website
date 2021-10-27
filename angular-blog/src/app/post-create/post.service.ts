@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { Post } from './post.model';
 import { Router } from '@angular/router';
@@ -35,7 +34,10 @@ export class PostsService {
   addPost(title: string, content: string) {
     const post: Post = { _id: '', title: title, content: content };
     this.http
-      .post<{ message: string; _id: string }>('http://localhost:3000/api/posts', post)
+      .post<{ message: string; _id: string }>(
+        'http://localhost:3000/api/posts',
+        post
+      )
       .subscribe((responseData) => {
         const _id = responseData._id;
         post._id = _id;
