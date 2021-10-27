@@ -25,6 +25,24 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
+  getPost(_id: string) {
+    // let post = { ...this.posts.find((p) => p._id === _id) };
+    // let finalPost: Post = {
+    //   _id: '',
+    //   title: '',
+    //   content: '',
+    // };
+    // post._id == undefined ? '' : (finalPost._id = post._id);
+    // post._id == undefined ? '' : (finalPost.title = post.title!);
+    // post._id == undefined ? '' : (finalPost.content = post.content!);
+    // return finalPost;
+    // return { ...this.posts.find((p) => p._id === _id) };
+
+    return this.http.get<{ _id: string; title: string; content: string }>(
+      'http://localhost:3000/api/posts/' + _id
+    );
+  }
+
   addPost(title: string, content: string) {
     const post: Post = { _id: '', title: title, content: content };
     this.http
@@ -36,13 +54,24 @@ export class PostsService {
       });
   }
 
-  deletePost(postId: string) {
+  updatePost(_id: string, title: string, content: string) {
+    const post: Post = { _id, title, content };
     this.http
-      .delete('http://localhost:3000/api/posts/' + postId)
-      .subscribe(() => {
-        const updatedPosts = this.posts.filter((post) => post._id !== postId);
+      .put('http://localhost:3000/api/posts/' + _id, post)
+      .subscribe((response) => {
+        const updatedPosts = [...this.posts];
+        const oldPostIndex = updatedPosts.findIndex((p) => p._id === post._id);
+        updatedPosts[oldPostIndex] = post;
         this.posts = updatedPosts;
         this.postsUpdated.next([...this.posts]);
       });
+  }
+
+  deletePost(_id: string) {
+    this.http.delete('http://localhost:3000/api/posts/' + _id).subscribe(() => {
+      const updatedPosts = this.posts.filter((post) => post._id !== _id);
+      this.posts = updatedPosts;
+      this.postsUpdated.next([...this.posts]);
+    });
   }
 }
