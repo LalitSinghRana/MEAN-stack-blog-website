@@ -1,11 +1,9 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const postRoutes = require('./routes/posts');
 
 const app = express();
-const cors = require('cors');
 
 mongoose
 	.connect(
@@ -18,14 +16,7 @@ mongoose
 		console.log('Connection failed');
 	});
 
-const corsOptions = {
-	origin: 'http://localhost:4200',
-	credentials: true, //access-control-allow-credentials:true
-	optionSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
-
-app.use(bodyParser.json());
+app.use(express.json());
 
 app.use((req, res, next) => {
 	res.setHeader('Access-Control-Allow-Origin', '*');
@@ -40,6 +31,6 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.use('/api/posts',postRoutes);
+app.use('/api/posts', postRoutes);
 
 module.exports = app;
