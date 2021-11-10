@@ -7,7 +7,7 @@ const app = express();
 
 mongoose
 	.connect(
-		'mongodb+srv://lalit:Lalitrana12-B@cluster0.srv5f.mongodb.net/node-angular?retryWrites=true&w=majority'
+		'' // insert mongodb atlas link here
 	)
 	.then(() => {
 		console.log('connected to database');
